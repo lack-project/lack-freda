@@ -92,6 +92,39 @@ class Freda {
 
     /**
      *
+     * @param filenames {string[]}
+     * @returns {Promise<FredaFile[]>}
+     */
+    async getFiles(filenames) {
+        let ret = await FredaConfig.caller("POST", "/data", {}, {alias: this.alias, filenames: filenames});
+
+        for (let idx in ret) {
+            ret[idx] = Object.assign(new FredaFile(), ret[idx]);
+        }
+        return ret;
+    }
+
+    /**
+     *
+     * <examples>
+     * await freda().getFilesGlob("**\/*.json");
+     * </examples>
+     *
+     * @param pattern {string}
+     * @returns {Promise<FredaFile[]>}
+     */
+    async getFilesGlob(pattern) {
+        let ret = await FredaConfig.caller("POST", "/data", {}, {alias: this.alias, globPattern: pattern});
+
+        for (let idx in ret) {
+            ret[idx] = Object.assign(new FredaFile(), ret[idx]);
+        }
+        return ret;
+    }
+
+
+    /**
+     *
      * @param file {FredaFile}
      * @returns {Promise<any>}
      */

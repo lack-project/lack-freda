@@ -26,6 +26,18 @@
     console.log (tree);
 
 
+
+
+
+    tree = await freda().getFiles(["/fs1/file1.json"]);
+    console.log(tree)
+    tree = await freda().getFilesGlob("**/*.json");
+    console.log(tree)
+
+    tree = await freda().getFilesGlob("**/*.json");
+    console.log(tree)
+
+
     tree = await freda().actionCopy("/fs1", "/top2");
 </script>
 

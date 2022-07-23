@@ -60,6 +60,21 @@ class PosixFileSystem implements FileSystemInterface
         return $ret;
     }
 
+    /**
+     * @param $pattern
+     * @return string[]
+     */
+    public function glob($pattern) : array {
+        if (str_contains($pattern, "..") || str_contains($pattern, "~"))
+            throw new \InvalidArgumentException("Invalid pattern.");
+
+        $ret = glob($this->rootDir . "/" . $pattern);
+        for ($i = 0; $i < count ($ret); $i++) {
+            $ret[$i] = substr($ret[$i], strlen($this->rootDir)+1);
+        }
+        return $ret;
+    }
+
 
     public function isExisting(string $filename): bool
     {

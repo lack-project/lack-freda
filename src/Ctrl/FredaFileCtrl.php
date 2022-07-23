@@ -7,6 +7,8 @@ use Brace\Router\Router;
 use Brace\Router\Type\RouteParams;
 use Lack\Freda\FredaConfig;
 use Lack\Freda\Type\T_FredaFile;
+use Lack\Freda\Type\T_FredaMultiGetRequest;
+use Phore\FileSystem\PhoreUri;
 
 class FredaFileCtrl implements RoutableCtrl
 {
@@ -15,7 +17,22 @@ class FredaFileCtrl implements RoutableCtrl
     {
         $router->on("GET@$mount/data/:alias/::file", [self::class, "readFile"], $mw, "freda-set-data");
 
+        $router->on("POST@$mount/data", [self::class, "getMulti"], $mw, "freda-get-data");
         $router->on("POST@$mount/data/:alias/::file", [self::class, "writeFile"], $mw, "freda-get-data");
+    }
+
+
+    protected function parseContent(PhoreUri $uri, string $data) {
+        switch ($uri->getExtension()) {
+            case "yml":
+            case "yaml":
+                $data = phore_yaml_decode($data);
+                break;
+            case "json":
+                $data = phore_json_decode($data);
+                break;
+        }
+        return $data;
     }
 
     public function readFile(RouteParams $routeParams, FredaConfig $fredaConfig) {
@@ -25,21 +42,28 @@ class FredaFileCtrl implements RoutableCtrl
 
         $content = $fs->getFile($file);
 
-        switch ($file->getExtension()) {
-            case "yml":
-            case "yaml":
-                $content = phore_yaml_decode($content);
-                break;
-            case "json":
-                $content = phore_json_decode($content);
-                break;
-        }
+        $content = $this->parseContent($file, $content);
 
         return new T_FredaFile(
             alias: $alias, filename: (string)$file, data: $content
         );
     }
 
+
+    public function getMulti(T_FredaMultiGetRequest $body, FredaConfig $fredaConfig) {
+        $fs = $fredaConfig->getFileSystem($body->alias);
+        $ret = [];
+
+        if ($body->globPattern !== null)
+            $body->filenames = $fs->glob($body->globPattern);
+
+        foreach ($body->filenames as $file) {
+            $content = $fs->getFile($file);
+            $content = $this->parseContent(phore_uri($file), $content);
+            $ret[] = new T_FredaFile($body->alias, $file, $content);
+        }
+        return $ret;
+    }
 
     public function writeFile(RouteParams $routeParams, T_FredaFile $body, FredaConfig $fredaConfig) {
         $file = phore_uri($routeParams->get("file"));
@@ -56,7 +80,7 @@ class FredaFileCtrl implements RoutableCtrl
                 $data =  phore_json_encode($body->data, prettyPrint: true);
                 break;
             default:
-                $data = (string)$data;
+                $data = (string)$body->data;
         }
         $fs->setFile($file, $data);
 
