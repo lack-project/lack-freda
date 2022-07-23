@@ -12,6 +12,9 @@ class T_FredaFTree
         public string $name,
         public string $type,
 
+        /**
+         * @var T_FredaFTree[]
+         */
         public array|null $children = null,
 
     ) {

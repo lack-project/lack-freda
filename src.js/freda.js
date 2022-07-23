@@ -127,5 +127,18 @@ class Freda {
     }
 
 
+    /**
+     *
+     * @param srcPath {string}
+     * @param destPath {string}
+     * @param srcAlias {string}
+     * @param destAlias {string}
+     * @returns {Promise<void>}
+     */
+    async actionCopy(srcPath, destPath, srcAlias="default", destAlias="default") {
+        let ret = await FredaConfig.caller("POST", "/action/copy", {}, {
+            srcAlias: srcAlias, destAlias: destAlias, srcPath: srcPath, destPath: destPath
+        });
+    }
 
 }
