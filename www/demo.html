@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Freda Demo</title>
+    <script src="/api/freda/freda.js"></script>
+</head>
+<body>
+
+
+<script type="module">
+
+
+    let w = await freda().getFile("/fs1/file1.json");
+    console.log(w);
+
+    w.data = {"some": "data"};
+    await freda().writeFile(w);
+</script>
+
+
+</body>
+</html>

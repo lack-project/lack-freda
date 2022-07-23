@@ -2,12 +2,13 @@
 
 namespace Lack\Freda\Ctrl;
 
+use Brace\Router\RoutableCtrl;
 use Brace\Router\Router;
 use Brace\Router\Type\RouteParams;
 use Lack\Freda\FredaConfig;
 use Lack\Freda\Type\T_FredaFile;
 
-class FredaFileCtrl
+class FredaFileCtrl implements RoutableCtrl
 {
 
     public static function Routes(Router $router, string $mount, array $mw): void
@@ -37,20 +38,23 @@ class FredaFileCtrl
     }
 
 
-    public function writeFile(RouteParams $routeParams, T_FredaFile $body) {
+    public function writeFile(RouteParams $routeParams, T_FredaFile $body, FredaConfig $fredaConfig) {
         $file = phore_uri($routeParams->get("file"));
         $alias = $routeParams->get("alias");
 
-        $file = $file->withSubPath($routeParams->get("file"))->asFile();
+        $fs = $fredaConfig->getFileSystem($alias);
 
         switch ($file->getExtension()) {
             case "yml":
             case "yaml":
-                return $file->set_yaml(phore_json_decode($body));
+                $data = phore_yaml_encode($body->data);
             case "json":
-                return $file->set_json(phore_json_decode($body), prettyPrint: true);
+                $data =  phore_json_encode($body->data, prettyPrint: true);
             default:
-                return $file->set_contents($body);
+                $data = (string)$data;
         }
+        $fs->setFile($file, $data);
+
+        return ["ok" => "file saved"];
     }
 }

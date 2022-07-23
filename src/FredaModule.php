@@ -4,7 +4,9 @@ namespace Lack\Freda;
 
 use Brace\Core\BraceApp;
 use Brace\Core\BraceModule;
+use Lack\Freda\Ctrl\FredaDirCtrl;
 use Lack\Freda\Ctrl\FredaFileCtrl;
+use Lack\Freda\Ctrl\FredaJsCtrl;
 use Lack\Freda\Filesystem\FileSystemInterface;
 use Phore\Di\Container\Producer\DiService;
 
@@ -24,12 +26,13 @@ class FredaModule implements BraceModule
     public function register(BraceApp $app)
     {
         $app->define("fredaConfig", new DiService(function () {
-            $fc = new FredaConfig();
+            $fc = new FredaConfig($this->apiMount);
             foreach ($this->filesystems as $fs)
                 $fc->addFileSystem($fs);
             return $fc;
         }));
 
+        $app->router->registerClass($this->apiMount, FredaJsCtrl::class, $this->mw);
         $app->router->registerClass($this->apiMount, FredaFileCtrl::class, $this->mw);
         $app->router->registerClass($this->apiMount, FredaDirCtrl::class, $this->mw);
     }

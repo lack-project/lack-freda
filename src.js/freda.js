@@ -65,11 +65,19 @@ class Freda {
 
     /**
      *
-     * @param filename
+     * @param filename {string|string[]}
      * @returns {Promise<FredaFile>}
      */
     async getFile(filename) {
-        let ret = await FredaConfig.caller("GET", "/data/{alias}/{filename}", {alias: this.alias, filename});
+        if (Array.isArray(filename))
+            filename = filename.join("/");
+
+        if (filename.startsWith("/"))
+            filename = filename.substring(1);
+
+        filename = filename.split("/");
+
+        let ret = await FredaConfig.caller("GET", "/data/{alias}/{filename}", {alias: this.alias, filename: filename});
         return Object.assign(new FredaFile(), ret);
     }
 
@@ -81,7 +89,7 @@ class Freda {
     async writeFile(file) {
         if ( ! file instanceof FredaFile)
             throw new Error("Invalid argument. File needs to be FredaFile");
-        return FredaConfig.caller("POST", "/data/{alias}/{filename}", {alias: this.alias, filename: file.fileName}, file);
+        return FredaConfig.caller("POST", "/data/{alias}/{filename}", {alias: this.alias, filename: file.filename.split("/")}, file);
     }
 
 
