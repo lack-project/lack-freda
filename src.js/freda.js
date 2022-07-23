@@ -65,17 +65,26 @@ class Freda {
 
     /**
      *
-     * @param filename {string|string[]}
-     * @returns {Promise<FredaFile>}
+     * @param filename {string}
+     * @returns string[]
      */
-    async getFile(filename) {
+    toArrayFilename(filename) {
         if (Array.isArray(filename))
             filename = filename.join("/");
 
         if (filename.startsWith("/"))
             filename = filename.substring(1);
 
-        filename = filename.split("/");
+        return filename.split("/");
+    }
+
+    /**
+     *
+     * @param filename {string|string[]}
+     * @returns {Promise<FredaFile>}
+     */
+    async getFile(filename) {
+        filename = this.toArrayFilename(filename);
 
         let ret = await FredaConfig.caller("GET", "/data/{alias}/{filename}", {alias: this.alias, filename: filename});
         return Object.assign(new FredaFile(), ret);
@@ -92,6 +101,30 @@ class Freda {
         return FredaConfig.caller("POST", "/data/{alias}/{filename}", {alias: this.alias, filename: file.filename.split("/")}, file);
     }
 
+    /**
+     * Return the url to the raw url of a filename
+     *
+     * @param filename {string}
+     * @returns {string}
+     */
+    getRawUrl(filename) {
+        filename = this.toArrayFilename(filename);
+        return FredaConfig.mount + "/" + this.alias + "/raw/" + filename.join("/");
+    }
+
+
+    /**
+     *
+     * @param dirname {string}
+     * @param recursive {boolean}
+     * @returns {Promise<FredaTree>}
+     */
+    async getTree(dirname = "/", recursive = false) {
+        dirname = this.toArrayFilename(dirname);
+
+        let ret = await FredaConfig.caller("GET", "/tree/{alias}/{dirname}", {alias: this.alias, dirname: dirname, recursive: recursive});
+        return Object.assign(new FredaTree(), ret);
+    }
 
 
 

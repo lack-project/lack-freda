@@ -16,6 +16,14 @@
 
     w.data = {"some": "data"};
     await freda().writeFile(w);
+
+
+    let tree = await freda().getTree("/fs1");
+    console.log (tree);
+
+
+    tree = await freda().getTree("/");
+    console.log (tree);
 </script>
 
 

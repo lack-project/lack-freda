@@ -56,6 +56,5 @@ $app->router->on("GET@/", function (BraceApp $braceApp) {
     return $braceApp->responseFactory->createResponseWithBody(file_get_contents("demo.html"), 200, ["Content-Type" => "text/html"]);
 });
 
-//$app->router->debugGetRoutes();
 
 $app->run();

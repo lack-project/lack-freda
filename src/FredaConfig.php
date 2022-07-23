@@ -12,6 +12,7 @@ class FredaConfig
     const JS_FILES = [
         __DIR__ . "/../src.js/freda.js",
         __DIR__ . "/../src.js/freda-file.js",
+        __DIR__ . "/../src.js/freda-tree.js",
     ];
 
     public function __construct(
