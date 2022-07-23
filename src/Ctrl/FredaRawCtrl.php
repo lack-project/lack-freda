@@ -32,7 +32,7 @@ class FredaRawCtrl implements RoutableCtrl
 
         $mimeType = self::MIME_TYPES[$file->getExtension()] ?? throw new \InvalidArgumentException("Cannot determine mime-type for extension '{$file->getExtension()}'");
 
-        return new $braceApp->responseFactory->createResponseWithBody(
+        return $braceApp->responseFactory->createResponseWithBody(
             $fs->getFile($file), 200, ["Content-Type" => $mimeType]
         );
     }

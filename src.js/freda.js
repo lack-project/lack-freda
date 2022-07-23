@@ -142,7 +142,7 @@ class Freda {
      */
     getRawUrl(filename) {
         filename = this.toArrayFilename(filename);
-        return FredaConfig.mount + "/" + this.alias + "/raw/" + filename.join("/");
+        return FredaConfig.mount + "/raw/" + this.alias + "/" + filename.join("/");
     }
 
 
