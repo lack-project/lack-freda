@@ -81,12 +81,13 @@ class Freda {
     /**
      *
      * @param filename {string|string[]}
+     * @param asText {boolean}          Return content as text (in text)
      * @returns {Promise<FredaFile>}
      */
-    async getFile(filename) {
+    async getFile(filename, asText=false) {
         filename = this.toArrayFilename(filename);
 
-        let ret = await FredaConfig.caller("GET", "/data/{alias}/{filename}", {alias: this.alias, filename: filename});
+        let ret = await FredaConfig.caller("GET", "/data/{alias}/{filename}", {alias: this.alias, filename: filename, asText: asText});
         return Object.assign(new FredaFile(), ret);
     }
 
@@ -95,8 +96,8 @@ class Freda {
      * @param filenames {string[]}
      * @returns {Promise<FredaFile[]>}
      */
-    async getFiles(filenames) {
-        let ret = await FredaConfig.caller("POST", "/data", {}, {alias: this.alias, filenames: filenames});
+    async getFiles(filenames, asText = false) {
+        let ret = await FredaConfig.caller("POST", "/data", {}, {alias: this.alias, filenames: filenames, asText: asText});
 
         for (let idx in ret) {
             ret[idx] = Object.assign(new FredaFile(), ret[idx]);
@@ -111,10 +112,11 @@ class Freda {
      * </examples>
      *
      * @param pattern {string}
+     * @param asText {boolean}      Return as text
      * @returns {Promise<FredaFile[]>}
      */
-    async getFilesGlob(pattern) {
-        let ret = await FredaConfig.caller("POST", "/data", {}, {alias: this.alias, globPattern: pattern});
+    async getFilesGlob(pattern, asText = false) {
+        let ret = await FredaConfig.caller("POST", "/data", {}, {alias: this.alias, globPattern: pattern, asText: asText});
 
         for (let idx in ret) {
             ret[idx] = Object.assign(new FredaFile(), ret[idx]);

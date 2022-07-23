@@ -11,7 +11,7 @@
 <script type="module">
 
 
-    let w = await freda().getFile("/fs1/file1.json");
+    let w = await freda().getFile("/fs1/file1.json", true);
     console.log(w);
 
     w.data = {"some": "data"};

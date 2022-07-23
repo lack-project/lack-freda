@@ -32,11 +32,14 @@ class FredaFileCtrl implements RoutableCtrl
             case "json":
                 $data = phore_json_decode($data);
                 break;
+            default:
+                throw new \InvalidArgumentException("No parser for file type '{$uri->getExtension()}'");
         }
         return $data;
     }
 
     public function readFile(RouteParams $routeParams, FredaConfig $fredaConfig, ServerRequest $request) {
+        $asText = (($request->getQueryParams()["asText"] ?? false) == "true");
         $file = phore_uri($routeParams->get("file"));
         $alias = $routeParams->get("alias");
         $fs = $fredaConfig->getFileSystem($alias);
@@ -44,13 +47,13 @@ class FredaFileCtrl implements RoutableCtrl
         $content = $fs->getFile($file);
 
 
-        $content = $this->parseContent($file, $content);
-
-        if (is_string($content)) {
+        if ($asText) {
             return new T_FredaFile(
                 alias: $alias, filename: (string)$file, text: $content
             );
         }
+        $content = $this->parseContent($file, $content);
+
         return new T_FredaFile(
             alias: $alias, filename: (string)$file, data: $content
         );
@@ -66,6 +69,10 @@ class FredaFileCtrl implements RoutableCtrl
 
         foreach ($body->filenames as $file) {
             $content = $fs->getFile($file);
+            if ($body->asText) {
+                $ret[] = new T_FredaFile($body->alias, $file, text: $content);
+                continue;
+            }
             $content = $this->parseContent(phore_uri($file), $content);
             $ret[] = new T_FredaFile($body->alias, $file, $content);
         }
@@ -78,19 +85,24 @@ class FredaFileCtrl implements RoutableCtrl
 
         $fs = $fredaConfig->getFileSystem($alias);
 
-        switch ($file->getExtension()) {
-            case "yml":
-            case "yaml":
-                $data = phore_yaml_encode($body->data);
-                break;
-            case "json":
-                $data =  phore_json_encode($body->data, prettyPrint: true);
-                break;
-            default:
+        if ($body->data !== null) {
+            switch ($file->getExtension()) {
+                case "yml":
+                case "yaml":
+                    $data = phore_yaml_encode($body->data);
+                    break;
+                case "json":
+                    $data =  phore_json_encode($body->data, prettyPrint: true);
+                    break;
+                default:
+            }
+        } elseif ($body->text !== null) {
+            $data = $body->text;
+        } else {
+            throw new \InvalidArgumentException("No data or text found.");
         }
 
-        if ($body->text !== null)
-            $data = $body->text;
+
         $fs->setFile($file, $data);
 
         return ["ok" => "file saved"];

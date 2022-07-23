@@ -20,4 +20,9 @@ class T_FredaMultiGetRequest
      */
     public string|null $globPattern = null;
 
+    /**
+     * @var bool
+     */
+    public bool $asText = false;
+
 }
