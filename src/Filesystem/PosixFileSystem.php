@@ -61,4 +61,8 @@ class PosixFileSystem implements FileSystemInterface
     }
 
 
+    public function isExisting(string $filename): bool
+    {
+        return phore_file($this->rootDir)->withSubPath($filename)->exists();
+    }
 }

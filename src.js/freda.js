@@ -133,11 +133,12 @@ class Freda {
      * @param destPath {string}
      * @param srcAlias {string}
      * @param destAlias {string}
+     * @param allowOverwrite {boolean}
      * @returns {Promise<void>}
      */
-    async actionCopy(srcPath, destPath, srcAlias="default", destAlias="default") {
+    async actionCopy(srcPath, destPath, srcAlias="default", destAlias="default", allowOverwrite=false) {
         let ret = await FredaConfig.caller("POST", "/action/copy", {}, {
-            srcAlias: srcAlias, destAlias: destAlias, srcPath: srcPath, destPath: destPath
+            srcAlias: srcAlias, destAlias: destAlias, srcPath: srcPath, destPath: destPath, allowOverwrite: allowOverwrite
         });
     }
 

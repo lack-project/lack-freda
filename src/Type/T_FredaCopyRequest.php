@@ -10,4 +10,6 @@ class T_FredaCopyRequest
 
     public string $destAlias;
     public string $destPath;
+
+    public bool $allowOverwrite = false;
 }

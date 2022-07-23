@@ -22,13 +22,18 @@ class FredaActionCopyCtrl implements RoutableCtrl
 
     public function copy(RouteParams $routeParams, ServerRequest $request, FredaConfig $fredaConfig, T_FredaCopyRequest $body)
     {
+
+
         $srcFs = $fredaConfig->getFileSystem($body->srcAlias);
         $destFs = $fredaConfig->getFileSystem($body->destAlias);
 
         $copy = function (T_FredaFTree $src) use (&$copy, $srcFs, $destFs, $body) {
             if ($src->children === null) {
+                $destFileName = $body->destPath . "/" . $src->relPath;
+                if ($destFs->isExisting($destFileName) && ! $body->allowOverwrite)
+                    throw new \InvalidArgumentException("File '$destFileName' already existing.");
                 $destFs->setFile(
-                    $body->destPath . "/" . $src->relPath,
+                    $destFileName,
                     $srcFs->getFile($src->fullPath)
                 );
                 return;
