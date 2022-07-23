@@ -27,7 +27,7 @@ class PosixFileSystem implements FileSystemInterface
     public function setFile(string $filename, string $content) : void {
         if ( ! $this->writeable)
             throw new \InvalidArgumentException("Freda Filesystem '$this->alias' is not writable.");
-        phore_dir($this->rootDir)->withSubPath($filename)->asFile()->touch()->set_contents($content);
+        phore_dir($this->rootDir)->withSubPath($filename)->asFile()->createPath()->set_contents($content);
     }
 
 
