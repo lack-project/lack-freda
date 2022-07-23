@@ -1,6 +1,21 @@
 
 
 class FredaFile {
+    /**
+     * @type string
+     */
+    alias;
+    /**
+     * @type string
+     */
+    filename;
+    /**
+     * @type {*}
+     */
+    data;
+
+    size;
+
 
     isDir() { return false; }
     ifFile() { return true; }
@@ -8,7 +23,9 @@ class FredaFile {
     constructor(filename=null, data=null) {
         this.filename = filename;
         this.data = data;
-        this.type;
-        this.size;
+    }
+
+    save() {
+        freda(this.alias).writeFile(this);
     }
 }
