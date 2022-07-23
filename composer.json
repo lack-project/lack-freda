@@ -1,0 +1,41 @@
+{
+    "name": "lack/freda",
+    "type": "project",
+    "description": "Remote File Editor for Brace Plugin",
+    "keywords": ["Phore", "Dependency Injection", "Di"],
+    "homepage": "https://infracamp.org",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matthias Leuffen",
+            "email": "matthes@leuffen.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "phore/filesystem": "*",
+        "brace/core": "*",
+        "brace/mod-router": "*"
+    },
+
+    "require-dev": {
+        "brace/mod-request-laminas": "*",
+        "phore/tester": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lack\\Freda\\": "src"
+        },
+        "files": [
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+        }
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+        }
+    }
+}
