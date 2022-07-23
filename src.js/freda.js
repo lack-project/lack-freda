@@ -152,7 +152,7 @@ class Freda {
      * @param recursive {boolean}
      * @returns {Promise<FredaTree>}
      */
-    async getTree(dirname = "/", recursive = false) {
+    async listTree(dirname = "/", recursive = false) {
         dirname = this.toArrayFilename(dirname);
 
         let ret = await FredaConfig.caller("GET", "/tree/{alias}/{dirname}", {alias: this.alias, dirname: dirname, recursive: recursive});
