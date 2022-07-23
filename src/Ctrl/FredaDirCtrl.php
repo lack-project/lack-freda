@@ -2,12 +2,16 @@
 
 namespace Lack\Freda\Ctrl;
 
-class FredaDirCtrl
+use Brace\Router\RoutableCtrl;
+use Brace\Router\Router;
+use Brace\Router\Type\RouteParams;
+
+class FredaDirCtrl implements RoutableCtrl
 {
 
 
-    public function list() {
-
+    public static function Routes(Router $router, string $mount, array $mw): void
+    {
+        // TODO: Implement Routes() method.
     }
-
 }
