@@ -12,7 +12,7 @@ class FredaRawCtrl implements RoutableCtrl
 {
 
     const MIME_TYPES = [
-        "svg" => "image/svg",
+        "svg" => "image/svg+xml",
         "png" => "image/png",
         "jpg" => "image/jpg",
         "*" => "text/plain"
