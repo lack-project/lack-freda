@@ -9,11 +9,20 @@ class FredaFile {
      * @type string
      */
     filename;
+
     /**
-     * @type {*}
+     * The parsed data
+     * 
+     * @type {{*}|*[]|null}
      */
     data;
 
+    /**
+     * Raw text data (if file cannot be parsed)
+     * @type {string|null}
+     */
+    text = null;
+    
     size;
 
 

@@ -8,9 +8,15 @@ class T_FredaFile
         public string $alias,
         public string $filename,
         /**
-         * @var array
+         * @var array|null
          */
-        public array $data,
+        public array|null $data = null,
+
+        /**
+         * @var string|null
+         */
+        public string|null $text = null,
+
         /**
          * @var int|null
          */

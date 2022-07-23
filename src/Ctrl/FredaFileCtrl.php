@@ -8,6 +8,7 @@ use Brace\Router\Type\RouteParams;
 use Lack\Freda\FredaConfig;
 use Lack\Freda\Type\T_FredaFile;
 use Lack\Freda\Type\T_FredaMultiGetRequest;
+use Laminas\Diactoros\ServerRequest;
 use Phore\FileSystem\PhoreUri;
 
 class FredaFileCtrl implements RoutableCtrl
@@ -35,15 +36,21 @@ class FredaFileCtrl implements RoutableCtrl
         return $data;
     }
 
-    public function readFile(RouteParams $routeParams, FredaConfig $fredaConfig) {
+    public function readFile(RouteParams $routeParams, FredaConfig $fredaConfig, ServerRequest $request) {
         $file = phore_uri($routeParams->get("file"));
         $alias = $routeParams->get("alias");
         $fs = $fredaConfig->getFileSystem($alias);
 
         $content = $fs->getFile($file);
 
+
         $content = $this->parseContent($file, $content);
 
+        if (is_string($content)) {
+            return new T_FredaFile(
+                alias: $alias, filename: (string)$file, text: $content
+            );
+        }
         return new T_FredaFile(
             alias: $alias, filename: (string)$file, data: $content
         );
@@ -80,8 +87,10 @@ class FredaFileCtrl implements RoutableCtrl
                 $data =  phore_json_encode($body->data, prettyPrint: true);
                 break;
             default:
-                $data = (string)$body->data;
         }
+
+        if ($body->text !== null)
+            $data = $body->text;
         $fs->setFile($file, $data);
 
         return ["ok" => "file saved"];
