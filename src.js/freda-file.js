@@ -25,7 +25,7 @@ class FredaFile {
         this.data = data;
     }
 
-    save() {
-        freda(this.alias).writeFile(this);
+    async save() {
+        return freda(this.alias).writeFile(this);
     }
 }
