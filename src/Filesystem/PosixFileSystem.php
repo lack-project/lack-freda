@@ -69,6 +69,7 @@ class PosixFileSystem implements FileSystemInterface
             throw new \InvalidArgumentException("Invalid pattern.");
 
         $ret = glob($this->rootDir . "/" . $pattern);
+        asort($ret);
         for ($i = 0; $i < count ($ret); $i++) {
             $ret[$i] = substr($ret[$i], strlen($this->rootDir)+1);
         }
