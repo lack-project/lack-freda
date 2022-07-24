@@ -81,4 +81,15 @@ class PosixFileSystem implements FileSystemInterface
     {
         return phore_file($this->rootDir)->withSubPath($filename)->exists();
     }
+
+    public function rm(string $uri, bool $recursive = false) {
+        $dir = phore_dir($this->rootDir)->withSubPath($uri);
+        if ($dir->isFile()) {
+            $dir->asFile()->unlink();
+            return;
+        }
+        if ($recursive === false)
+            throw new \InvalidArgumentException("Cannot delete a directory if recursive isn't set");
+        $dir->asDirectory()->rmDir(true);
+    }
 }

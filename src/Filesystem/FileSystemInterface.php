@@ -12,4 +12,5 @@ interface FileSystemInterface
     public function getTree(string $dir, $recursive = false) : T_FredaFTree;
     public function isExisting(string $filename) : bool;
     public function glob($pattern) : array ;
+    public function rm(string $uri, bool $recursive = false);
 }

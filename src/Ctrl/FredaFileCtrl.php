@@ -20,6 +20,7 @@ class FredaFileCtrl implements RoutableCtrl
 
         $router->on("POST@$mount/data", [self::class, "getMulti"], $mw, "freda-get-data");
         $router->on("POST@$mount/data/:alias/::file", [self::class, "writeFile"], $mw, "freda-get-data");
+        $router->on("DELETE@$mount/data/:alias/::file", [self::class, "deleteFile"], $mw, "freda-delete-data");
     }
 
 
@@ -77,6 +78,17 @@ class FredaFileCtrl implements RoutableCtrl
             $ret[] = new T_FredaFile($body->alias, $file, $content);
         }
         return $ret;
+    }
+
+    public function deleteFile(RouteParams $routeParams, ServerRequest $request, FredaConfig $fredaConfig) {
+        $file = phore_uri($routeParams->get("file"));
+        $alias = $routeParams->get("alias");
+
+        $recursive = $request->getQueryParams()["recursive"] === "true";
+
+        $fs = $fredaConfig->getFileSystem($alias);
+        $fs->rm($file, $recursive);
+        return ["ok" => "File deleted"];
     }
 
     public function writeFile(RouteParams $routeParams, T_FredaFile $body, FredaConfig $fredaConfig) {

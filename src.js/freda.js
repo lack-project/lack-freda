@@ -137,6 +137,21 @@ class Freda {
     }
 
     /**
+     *
+     * @param file {FredaFile}
+     * @param recursive {boolean}
+     * @returns {Promise<any>}
+     */
+    async deleteFile(file, recursive = false) {
+        let filename = file;
+        if (file instanceof FredaFile)
+            filename = file.filename;
+
+        filename = this.toArrayFilename(filename);
+        return FredaConfig.caller("DELETE", "/data/{alias}/{filename}", {alias: this.alias, filename: filename, recursive: recursive});
+    }
+
+    /**
      * Return the url to the raw url of a filename
      *
      * @param filename {string}
