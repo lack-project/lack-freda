@@ -97,7 +97,7 @@ class FredaFileCtrl implements RoutableCtrl
 
         $fs = $fredaConfig->getFileSystem($alias);
 
-        if ($body->data !== null) {
+        if (isset ($body->data) && $body->data !== null) {
             switch ($file->getExtension()) {
                 case "yml":
                 case "yaml":
@@ -108,7 +108,7 @@ class FredaFileCtrl implements RoutableCtrl
                     break;
                 default:
             }
-        } elseif ($body->text !== null) {
+        } elseif (isset ($body->text) && $body->text !== null) {
             $data = $body->text;
         } else {
             throw new \InvalidArgumentException("No data or text found.");
