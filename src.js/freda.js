@@ -133,7 +133,7 @@ class Freda {
     async writeFile(file) {
         if ( ! file instanceof FredaFile)
             throw new Error("Invalid argument. File needs to be FredaFile");
-        return FredaConfig.caller("POST", "/data/{alias}/{filename}", {alias: this.alias, filename: file.filename.split("/")}, file);
+        return await FredaConfig.caller("POST", "/data/{alias}/{filename}", {alias: this.alias, filename: file.filename.split("/")}, file);
     }
 
     /**

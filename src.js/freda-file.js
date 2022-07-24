@@ -12,7 +12,7 @@ class FredaFile {
 
     /**
      * The parsed data
-     * 
+     *
      * @type {{*}|*[]|null}
      */
     data;
@@ -22,7 +22,7 @@ class FredaFile {
      * @type {string|null}
      */
     text = null;
-    
+
     size;
 
 
@@ -52,6 +52,6 @@ class FredaFile {
     }
 
     async delete() {
-        await freda(this.alias).deleteFile(this.filename);
+        return await freda(this.alias).deleteFile(this.filename);
     }
 }
