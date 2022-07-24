@@ -19,6 +19,7 @@
 
     await w.save();
 
+    await w.sync();
 
     let tree = await freda().listTree("/fs1");
     console.log (tree);

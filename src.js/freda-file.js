@@ -37,4 +37,21 @@ class FredaFile {
     async save() {
         return freda(this.alias).writeFile(this);
     }
+
+    /**
+     * Syncronize File with server (so write and read it again)
+     *
+     * @returns {Promise<void>}
+     */
+    async sync() {
+        await freda(this.alias).writeFile(this);
+        if (this.data !== null)
+            this.data = (await freda(this.alias).getFile(this.filename)).data
+        else
+            this.text = (await freda(this.alias).getFile(this.filename, true)).text
+    }
+
+    async delete() {
+        await freda(this.alias).deleteFile(this.filename);
+    }
 }
