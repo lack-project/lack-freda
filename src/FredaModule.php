@@ -5,6 +5,7 @@ namespace Lack\Freda;
 use Brace\Core\BraceApp;
 use Brace\Core\BraceModule;
 use Lack\Freda\Ctrl\FredaActionCopyCtrl;
+use Lack\Freda\Ctrl\FredaFormatCtrl;
 use Lack\Freda\Ctrl\FredaTreeCtrl;
 use Lack\Freda\Ctrl\FredaFileCtrl;
 use Lack\Freda\Ctrl\FredaJsCtrl;
@@ -39,5 +40,6 @@ class FredaModule implements BraceModule
         $app->router->registerClass($this->apiMount, FredaTreeCtrl::class, $this->mw);
         $app->router->registerClass($this->apiMount, FredaRawCtrl::class, $this->mw);
         $app->router->registerClass($this->apiMount, FredaActionCopyCtrl::class, $this->mw);
+        $app->router->registerClass($this->apiMount, FredaFormatCtrl::class, $this->mw);
     }
 }

@@ -194,4 +194,9 @@ class Freda {
         });
     }
 
+    async format (input, format="json_pretty") {
+        return (await FredaConfig.caller("POST", "/format", {format: format}, {
+            input: input
+        })).data;
+    }
 }
